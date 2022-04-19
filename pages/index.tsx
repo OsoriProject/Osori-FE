@@ -15,10 +15,10 @@ const Home: NextPage = () => {
       <section className="banner">
         <div className="banner-logo">
           <div className="stroke-logo-container">
-            <Image src="/images/logo_stroke_white.png" layout="fill" sizes="30vw" />
+            <Image src="/images/logo_stroke_white.svg" layout="fill"  />
           </div>
           <div className="text-logo-container">
-            <Image src="/images/osori_text_logo.png" layout="fill" sizes="30vw" />
+            <Image src="/images/osori_text_logo.svg" layout="fill" />
           </div>
         </div>
         <div className="banner-description">
