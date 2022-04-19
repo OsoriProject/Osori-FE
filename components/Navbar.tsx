@@ -9,7 +9,7 @@ function NavBar(){
   const [menu, setMenu] = useState(false);
 
   const changeNavbarBackground = ()=>{
-    setNavbar(window.scrollY <=500 ? false : true);
+    setNavbar(window.scrollY <=1 ? false : true);
   };
 
   const openMenu = () =>{
@@ -46,6 +46,7 @@ function NavBar(){
           position: -webkit-sticky;
           position:sticky;
           z-index:999;
+          background-opacity:1;
           display:flex;
           justify-content: space-between;
           align-items:center;
@@ -53,9 +54,9 @@ function NavBar(){
           top:0;
         }
         .active{
-          background-color:#9933ff;
-          -webkit-transition:width 2s, height 2s, background-color 2s, -webkit-transform 2s;
-          transition:width 2s, height 2s, background-color 2s, transform 2s;
+          background-color:#B695F9;
+          -webkit-transition:width 2s, height 2s, background-color 2s, -webkit-transform 1s;
+          transition:width 2s, height 2s, background-color 0.5s, transform 1s;
         }
         .nav-menu{
           display: flex;
@@ -97,7 +98,7 @@ function NavBar(){
             position:absolute;
             top:24.5px;
             margin:10px 0 0 0;
-            background-color:#9933ff;
+            background-color:#B695F9;
             z-index:-99;
           }
           .nav-toggle-btn{
