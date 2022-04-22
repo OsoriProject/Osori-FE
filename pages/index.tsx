@@ -136,6 +136,16 @@ const Home: NextPage = () => {
               line-height:1.5em;
               font-weight: normal;
               letter-spacing: -0.5px;
+              text-align:center;
+            }
+            .banner{
+              flex-direction:column;
+            }
+            .banner-description{
+              display:flex;
+              flex-direction:column;
+              align-items:center;
+              width:100%;
             }
           }
         `}
