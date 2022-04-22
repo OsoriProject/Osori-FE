@@ -5,19 +5,26 @@ import { useEffect, useState } from "react";
 
 function NavBar(){
   const router = useRouter();
+  // is navbar scrolled down? 
   const [navbar, setNavbar] = useState(false);
+  // is the navbar toggle btn clicked?
   const [menu, setMenu] = useState(false);
 
-  const changeNavbarBackground = ()=>{
-    setNavbar(window.scrollY <=500 ? false : true);
+  //navbar background change resposive to scroll
+  const changeNavbarBackgroundOnScroll = ()=>{
+    setNavbar(window.scrollY >= 1 ? true : false);
+    setMenu(false);
   };
-
-  const openMenu = () =>{
+  //menu dropdown resposinve to toggle btn click
+  const clickMenu = () =>{
+    if(window.scrollY <= 1){
+      setNavbar(!navbar);
+    }
     setMenu(!menu);
   }
   useEffect(()=>{
-    window.addEventListener('scroll', changeNavbarBackground);
-    return () => window.removeEventListener('scroll', changeNavbarBackground);
+    window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
+    return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
   }, [])
   return (
     <nav className={navbar ? "navbar active" : "navbar"}>
@@ -37,7 +44,7 @@ function NavBar(){
       </div>
       <a 
         className="nav-toggle-btn"
-        onClick={openMenu}
+        onClick={()=>{clickMenu()}}
       >
         <Image src="/icons/hamburger_menu.svg" width="32" height="32" />
       </a>
@@ -46,6 +53,7 @@ function NavBar(){
           position: -webkit-sticky;
           position:sticky;
           z-index:999;
+          background-opacity:1;
           display:flex;
           justify-content: space-between;
           align-items:center;
@@ -53,9 +61,9 @@ function NavBar(){
           top:0;
         }
         .active{
-          background-color:#9933ff;
-          -webkit-transition:width 2s, height 2s, background-color 2s, -webkit-transform 2s;
-          transition:width 2s, height 2s, background-color 2s, transform 2s;
+          background-color:#B695F9;
+          -webkit-transition:width 2s, height 2s, background-color 2s, -webkit-transform 1s;
+          transition:width 2s, height 2s, background-color 0.5s, transform 1s;
         }
         .nav-menu{
           display: flex;
@@ -97,7 +105,7 @@ function NavBar(){
             position:absolute;
             top:24.5px;
             margin:10px 0 0 0;
-            background-color:#9933ff;
+            background-color:#B695F9;
             z-index:-99;
           }
           .nav-toggle-btn{
