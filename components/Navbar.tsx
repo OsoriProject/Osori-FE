@@ -9,7 +9,8 @@ function NavBar(){
   const [navbar, setNavbar] = useState(false);
   // is the navbar toggle btn clicked?
   const [menu, setMenu] = useState(false);
-
+  // is Logged in?
+  const [isLogin, setIsLogin] = useState(false);
   //navbar background change resposive to scroll
   const changeNavbarBackgroundOnScroll = ()=>{
     setNavbar(window.scrollY >= 1 ? true : false);
@@ -26,6 +27,7 @@ function NavBar(){
     window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
     return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
   }, [])
+  
   return (
     <nav className={navbar ? "navbar active" : "navbar"}>
       <div className="nav-brand">
@@ -35,11 +37,15 @@ function NavBar(){
         <Link href="/">
           <a className={router.pathname==="/" ? "selected" : ""}>ABOUT</a>
         </Link>
-        <Link href="/">
-          <a className={router.pathname==="/chat" ? "selected" : ""}>CHAT</a>
+        <Link href="/chat/1">
+          <a className={router.pathname==="/chat/[id]" ? "selected" : ""}>CHAT</a>
         </Link>
         <Link href="/">
-          <a className={router.pathname==="/mylist" ? "selected" : ""}>MYLISTS</a>
+          {isLogin ? 
+            <a className={router.pathname==="/mylist/1" ? "selected" : ""}>MYLISTS</a>
+            :
+            <a className={router.pathname==="/login/1" ? "selected" : ""}>LOGIN</a>
+          }
         </Link>
       </div>
       <a 
