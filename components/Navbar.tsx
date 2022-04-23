@@ -44,13 +44,15 @@ function NavBar(){
         <Link href="/chat/1" >
           <a className={router.pathname==="/chat/[id]" ? "selected" : ""} onClick={handleClickLink}>CHAT</a>
         </Link>
-        <Link href="/" >
-          {isLogin ? 
+        {isLogin ? 
+          <Link href="/mylists">
             <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleClickLink}>MYLISTS</a>
-            :
-            <a className={router.pathname==="/login/1" ? "selected" : ""} onClick={handleClickLink}>LOGIN</a>
-          }
-        </Link>
+          </Link>
+          :
+          <Link href="/login">
+            <a className={router.pathname==="/login" ? "selected" : ""} onClick={handleClickLink}>LOGIN</a>
+          </Link>
+        }
       </div>
       <a 
         className="nav-toggle-btn"
