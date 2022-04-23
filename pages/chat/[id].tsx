@@ -1,7 +1,9 @@
 import { NextPage } from "next";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import ChatElem from "../../components/ChatElem";
 import Container from "../../components/Container";
+import { chatObj } from "../../components/ChatElem";
 const userSpeech = {
   sender: 1,
   content: "우울할 때 들을 음악 추천해줘"
@@ -12,7 +14,16 @@ const osoriSpeech = {
 }
 
 const Chat : NextPage = () => {
-  
+  const [msg, setMsg] = useState({});
+  const [msgList, setMsgList] = useState<chatObj[]>([
+    userSpeech, osoriSpeech
+  ]);
+  const handleSendMessage = ()=>{
+    alert("Message Sent");
+  }
+  useEffect(()=>{
+    setMsgList([userSpeech, osoriSpeech]);
+  }, [])
   return (
     <>
       <div className="container">
@@ -37,9 +48,25 @@ const Chat : NextPage = () => {
             <div id="line"></div>
           </div>
           <div className="chat-screen">
-            <ChatElem chatElemProps={userSpeech} />
-            <ChatElem chatElemProps={osoriSpeech} />
+            {msgList && msgList.map((msgObj)=>{
+              return <ChatElem key={msgObj.content} chatElemProps={msgObj} />
+            })}
           </div>
+          <form onSubmit={handleSendMessage} className="chat-form">
+            <input 
+              type="hidden"
+            />
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Text Message"
+            />
+            <button type="submit">
+              <div style={{position:"relative", width:"34px", height:"34px"}}>
+                <Image src="/images/send.svg" layout="fill"/>
+              </div>
+            </button>
+          </form>
         </Container>
       </div>
       <style jsx>{`
@@ -80,6 +107,33 @@ const Chat : NextPage = () => {
         .chat-screen{
           width:85%;
           margin-top: 2.75em;
+          flex:0.95;
+        }
+        .chat-form{
+          width:85%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        }
+        .chat-input{
+          height: 40px;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 40px;
+          margin: 0 0.5rem 0 0;
+          width: calc(100% - 52px);
+          background-color: #dedfed;
+          box-shadow: inset 0 0 0 2px #dedfed;
+          font-size: 14px;
+          font-family: 'GmarketSans', sans-serif;
+          font-weight: normal;
+          transition: 0.15s all ease-in-out;
+          box-sizing: border-box;
+        }
+        button{
+          all: unset;
+          border-radius:50%;
+          cursor: pointer;
         }
       `}</style>
     </>

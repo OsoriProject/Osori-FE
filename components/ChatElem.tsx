@@ -1,4 +1,4 @@
-interface chatObj{
+export interface chatObj{
   sender: number, // 0: Osori, 1: user
   content: string
 }
@@ -10,7 +10,7 @@ const ChatElem = ({chatElemProps} : {chatElemProps: chatObj}) =>{
         <div className="speech">
           <div className="tail"></div>
           <div className="body">
-            <p>{chatElemProps.content}</p>
+            {chatElemProps.content}
           </div>
         </div>
       </div>
@@ -23,16 +23,20 @@ const ChatElem = ({chatElemProps} : {chatElemProps: chatObj}) =>{
         }
         .speech{
           display:flex;
-          height:1.8em;
-          max-width:100%;
+          min-height:1.8em;
+          max-width:50%;
           align-items:flex-end;
         }
         .body{
           display:flex;
           align-items:center;
           justify-content:center;
-          border-radius:50%;
-          height:1.8em;
+          border-radius:20px;
+          padding:0px;
+          color:white;
+          min-height:1.8em;
+          padding:10px;
+          box-sizing:border-box;
           background-color: ${chatElemProps.sender === 0 ? "#B695F9" : "#68A5FF"};
           order: ${chatElemProps.sender === 0 ? 1 : 0}
         }
@@ -40,12 +44,11 @@ const ChatElem = ({chatElemProps} : {chatElemProps: chatObj}) =>{
           border-radius:100%;
           width:0.56em;
           height:0.56em;
+          flex-shrink:0;
           background-color: ${chatElemProps.sender === 0 ? "#B695F9" : "#68A5FF"};
           order: ${chatElemProps.sender === 0 ? 0 : 1}
         }
-        p{
-          color:white;
-        }
+        
       `}</style>
     </>
   );

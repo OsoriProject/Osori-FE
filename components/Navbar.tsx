@@ -27,6 +27,7 @@ function NavBar(){
     window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
     return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
   }, [])
+  
   return (
     <nav className={navbar ? "navbar active" : "navbar"}>
       <div className="nav-brand">
@@ -37,7 +38,7 @@ function NavBar(){
           <a className={router.pathname==="/" ? "selected" : ""}>ABOUT</a>
         </Link>
         <Link href="/chat/1">
-          <a className={router.pathname==="/chat/1" ? "selected" : ""}>CHAT</a>
+          <a className={router.pathname==="/chat/[id]" ? "selected" : ""}>CHAT</a>
         </Link>
         <Link href="/">
           {isLogin ? 
