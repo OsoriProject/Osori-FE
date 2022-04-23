@@ -23,6 +23,10 @@ function NavBar(){
     }
     setMenu(!menu);
   }
+  const handleClickLink = ()=>{
+    setMenu(false);
+    setNavbar(false);
+  }
   useEffect(()=>{
     window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
     return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
@@ -34,17 +38,17 @@ function NavBar(){
         <img src="/images/osori_text_logo_white.png"/>
       </div>
       <div className={menu ? "nav-menu active" : "nav-menu"}>
-        <Link href="/">
-          <a className={router.pathname==="/" ? "selected" : ""}>ABOUT</a>
+        <Link href="/" >
+          <a className={router.pathname==="/" ? "selected" : ""} onClick={handleClickLink}>ABOUT</a>
         </Link>
-        <Link href="/chat/1">
-          <a className={router.pathname==="/chat/[id]" ? "selected" : ""}>CHAT</a>
+        <Link href="/chat/1" >
+          <a className={router.pathname==="/chat/[id]" ? "selected" : ""} onClick={handleClickLink}>CHAT</a>
         </Link>
-        <Link href="/">
+        <Link href="/" >
           {isLogin ? 
-            <a className={router.pathname==="/mylist/1" ? "selected" : ""}>MYLISTS</a>
+            <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleClickLink}>MYLISTS</a>
             :
-            <a className={router.pathname==="/login/1" ? "selected" : ""}>LOGIN</a>
+            <a className={router.pathname==="/login/1" ? "selected" : ""} onClick={handleClickLink}>LOGIN</a>
           }
         </Link>
       </div>
