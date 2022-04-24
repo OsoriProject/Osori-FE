@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Container from "../../components/Container";
+import Link from "next/link";
 
 const Login = ()=>{
   return (
@@ -37,7 +38,10 @@ const Login = ()=>{
               </div>
               <input type="submit" value="Login" />
               <div className="signup-link">
-                계정이 없으신가요? <a href="#">회원가입</a>
+                계정이 없으신가요? 
+                <Link href="/login/signup">
+                  <a href="#">회원가입</a>
+                </Link>
               </div>
             </form>
           </div>
