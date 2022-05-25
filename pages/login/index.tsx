@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Container from "../../components/Container";
 import Link from "next/link";
+import { MutableRefObject, useEffect, useRef } from "react";
 
 const Login = ()=>{
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(()=>{
+    if(inputRef.current){
+      inputRef.current.focus();
+    }
+  }, [])
   return (
     <>
       <div className="container">
@@ -24,7 +31,7 @@ const Login = ()=>{
           <div className="login-form">
             <form method="post">
               <div className="text-field">
-                <input type="text" required />
+                <input ref={inputRef} type="text" required />
                 <span></span>
                 <label>이메일</label>
               </div>
@@ -100,7 +107,8 @@ const Login = ()=>{
           border: none;
           background: none;
           outline:none;
-          font-size:1em;
+          font-size:0.9em;
+          font-family:'GmarketSans';
         }
         .text-field label{
           position:absolute;

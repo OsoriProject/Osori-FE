@@ -1,7 +1,14 @@
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import Container from "../../components/Container";
 
 const Register = () =>{
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(()=>{
+    if(inputRef.current){
+      inputRef.current.focus();
+    }
+  },[])
   return (
     <>
       <div className="container">
@@ -23,7 +30,7 @@ const Register = () =>{
           <div className="login-form">
             <form method="post">
               <div className="text-field">
-                <input type="text" required />
+                <input ref={inputRef} type="text" required />
                 <span></span>
                 <label>이메일</label>
               </div>
@@ -36,6 +43,11 @@ const Register = () =>{
                 <input type="password" required />
                 <span></span>
                 <label>비밀번호 확인</label>
+              </div>
+              <div className="text-field">
+                <input type="text" required />
+                <span></span>
+                <label>닉네임</label>
               </div>
               <input type="submit" value="Sign up" />
             </form>
@@ -95,7 +107,8 @@ const Register = () =>{
           border: none;
           background: none;
           outline:none;
-          font-size:1em;
+          font-size:0.9em;
+          font-family: 'GmarketSans';
         }
         .text-field label{
           position:absolute;
