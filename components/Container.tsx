@@ -19,6 +19,7 @@ const Container = ({children} : {children:JSX.Element | JSX.Element[]}) => {
           border-radius: 46px;
           justify-content:flex-start;
           align-items:center;
+          padding-bottom:10px;
         }
         @media screen and (max-width: 768px){
           .container{

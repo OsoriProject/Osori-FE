@@ -1,4 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Container from "../../components/Container";
 import VideoList from "../../components/VideoList";
@@ -49,16 +50,24 @@ const Play: NextPage = ()=>{
       <div className="container">
         <h2>{"플레이리스트"}</h2>
         <Container>
-          <iframe 
-            style={{"borderRadius" : "35px 35px 0 0"}} 
-            width="100%" 
-            height="315" 
-            src={videoSrcs[0]} 
-            title="YouTube video player" 
-            frameBorder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowFullScreen={true}>
-          </iframe>
+          <div className="iframe-container">
+            <iframe 
+              style={{"borderRadius" : "35px 35px 0 0"}} 
+              width="100%" 
+              height="315" 
+              src={`https://youtube.com/embed/${videoList[0].videoId}`} 
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen={true}>
+            </iframe>
+          </div>
+          <div className="title-container">
+            <h2>{videoList[0].title}</h2>
+            <div className="icon-wrapper">
+              <Image src="/icons/three_dots.svg" layout="fill" />
+            </div>
+          </div>
           <VideoList videoList={videoList} />
         </Container>
       </div>
@@ -68,6 +77,23 @@ const Play: NextPage = ()=>{
           flex-direction:column;
           align-items:center;
           justify-content:center;
+        }
+        .iframe-container{
+          width:100%;
+          height:315px;
+        }
+        .title-container{
+          width:100%;
+          display:flex;
+          justify-content: space-around;
+          align-items: center;
+        }
+        .icon-wrapper{
+          position:relative;
+          width:30px;
+          height:30px;
+          cursor: pointer;
+          padding-left: 50px;
         }
       `}</style>
     </>
