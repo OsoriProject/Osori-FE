@@ -47,8 +47,8 @@ const Play: NextPage = ()=>{
   return(
     <>
       <div className="container">
-        <h1>{"플레이리스트"}</h1>
-        <Container>
+        <h1 className="playlist-title">{"힐링 어쿠스틱 플레이리스트"}</h1>
+        <Container height={200}>
           <div className="iframe-container">
             <iframe 
               style={{"borderRadius" : "35px 35px 0 0"}} 
@@ -100,6 +100,11 @@ const Play: NextPage = ()=>{
           height:30px;
           cursor: pointer;
           padding-left: 50px;
+        }
+        .playlist-title{
+          color: #FFFFFF;
+          font-weight: 400;
+          text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         }
       `}</style>
     </>

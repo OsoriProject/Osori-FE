@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Container = ({children} : {children:JSX.Element | JSX.Element[]}) => {
+const Container = ({children, height} : {children:JSX.Element | JSX.Element[], height: number | null}) => {
   return (
     <>
       <div className="container">
@@ -13,7 +13,7 @@ const Container = ({children} : {children:JSX.Element | JSX.Element[]}) => {
           margin-top:4.2em;
           margin-bottom:4.2em;
           width: 608px;
-          height: 667px;
+          height: ${height? (667+height).toString()+"px" : "667px"};
           background: #FFFFFF;
           box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
           border-radius: 46px;

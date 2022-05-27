@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ChatElem from "../../components/ChatElem";
 import Container from "../../components/Container";
 import { chatObj } from "../../components/ChatElem";
+import { ContainerProps } from "../../components/Container";
 
 const userSpeech = {
   sender: 1,
