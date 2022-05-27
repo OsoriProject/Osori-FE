@@ -4,13 +4,14 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Button from '../components/Button'
 import Link from 'next/link'
+
 const Home: NextPage = () => {
   return (
     <>
       <section className="banner">
         <div className="banner-logo">
           <div className="stroke-logo-container">
-            <Image src="/images/logo_stroke_white.svg" layout="fill"  />
+            <Image src="/images/logo_stroke_white.svg" layout="fill" />
           </div>
           <div className="text-logo-container">
             <Image src="/images/osori_text_logo.svg" layout="fill" />
@@ -27,7 +28,7 @@ const Home: NextPage = () => {
             더욱 다채로워질 수 있도록.<br/>
             소리를 만나다, 오소리<br />
           </p>
-          <Link href="/chat">
+          <Link href="/chat/1">
             <a>
               <Button ButtonProps={{label:"오소리와 채팅하기", fontSize:1.25}}/>
             </a>
@@ -37,7 +38,7 @@ const Home: NextPage = () => {
       <section className="tutorial-container">
         <article className="tutorial">
           <div className="tutorial-picture">
-            <Image src="/images/tutorial-step1.svg" width="426" height="436"/>
+            <Image src="/images/tutorial-step1.svg" width="426" height="436" priority/>
           </div>
           <div className="tutorial-description">
             <Image src="/images/description-blob-step1.svg" layout="fill" style={{zIndex:-1}}/>

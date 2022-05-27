@@ -1,9 +1,11 @@
 import { NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatElem from "../../components/ChatElem";
 import Container from "../../components/Container";
 import { chatObj } from "../../components/ChatElem";
+import { ContainerProps } from "../../components/Container";
+
 const userSpeech = {
   sender: 1,
   content: "우울할 때 들을 음악 추천해줘"
@@ -18,11 +20,16 @@ const Chat : NextPage = () => {
   const [msgList, setMsgList] = useState<chatObj[]>([
     userSpeech, osoriSpeech
   ]);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleSendMessage = ()=>{
     alert("Message Sent");
   }
   useEffect(()=>{
     setMsgList([userSpeech, osoriSpeech]);
+    if(inputRef.current){
+      inputRef.current.focus();
+    }
   }, [])
   return (
     <>
@@ -58,8 +65,9 @@ const Chat : NextPage = () => {
             />
             <input
               type="text"
+              ref={inputRef}
               className="chat-input"
-              placeholder="Text Message"
+              placeholder="우울할 때 들을만한 음악 추천해줘!"
             />
             <button type="submit">
               <div style={{position:"relative", width:"34px", height:"34px"}}>
