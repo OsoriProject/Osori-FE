@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Container from "../../components/Container";
 import VideoList from "../../components/VideoList";
 
@@ -9,12 +9,13 @@ export type musicObj = {
   videoId: string, 
   title: string
 }
+
 export type videoListProps = {
   videoList: musicObj[],
+  selectedVideoId: string,
+  setSelectedVideoId: any,
 }
-const tmpVideoList: musicObj[] = [
 
-]
 const Play: NextPage = ()=>{
   const videoSrcs: string[] = [
     'https://www.youtube.com/embed/2fvw0TkENHM'
@@ -42,20 +43,19 @@ const Play: NextPage = ()=>{
       title: 'Pink Sweat$ - I Feel Good [Official Audio]'
     }
   ])
-  useEffect(()=>{
-    
-  }, [])
+  const [selectedVideoId, setSelectedVideoId] = useState<string>(videoList[0].videoId);
+
   return(
     <>
       <div className="container">
-        <h2>{"플레이리스트"}</h2>
+        <h1>{"플레이리스트"}</h1>
         <Container>
           <div className="iframe-container">
             <iframe 
               style={{"borderRadius" : "35px 35px 0 0"}} 
               width="100%" 
               height="315" 
-              src={`https://youtube.com/embed/${videoList[0].videoId}`} 
+              src={`https://youtube.com/embed/${selectedVideoId}`} 
               title="YouTube video player" 
               frameBorder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -63,12 +63,20 @@ const Play: NextPage = ()=>{
             </iframe>
           </div>
           <div className="title-container">
-            <h2>{videoList[0].title}</h2>
+            <h2>{videoList.map(item=>{
+              if(selectedVideoId === item.videoId){
+                return <p>{item.title}</p>
+              }
+            })}</h2>
             <div className="icon-wrapper">
               <Image src="/icons/three_dots.svg" layout="fill" />
             </div>
           </div>
-          <VideoList videoList={videoList} />
+          <VideoList 
+            videoList={videoList} 
+            selectedVideoId={selectedVideoId} 
+            setSelectedVideoId={setSelectedVideoId}
+          />
         </Container>
       </div>
       <style jsx>{`

@@ -2,10 +2,15 @@ import Image from 'next/image';
 import React from 'react';
 import { videoListItemProps } from './VideoList';
 
-const VideoListItem = ({video}: videoListItemProps) => {
+const VideoListItem = ({video, setSelectedVideoId}: videoListItemProps) => {
+
+  const handleSelect = (id: string)=>{
+    setSelectedVideoId(id);
+  }
+
   return(
     <>
-      <div className="videoitem-container">
+      <div className="videoitem-container" onClick={()=>{handleSelect(video.videoId)}}>
         <div className="thumbnail-container">
           <Image src={video.thumbnail} layout="fill"/>
         </div>
@@ -18,6 +23,7 @@ const VideoListItem = ({video}: videoListItemProps) => {
           display:flex;
           margin:10px 10px 10px 10px;
           box-shadow: 1.55897px 6.2359px 7.79487px rgba(0, 0, 0, 0.3);
+          pointer: cursor;
         }
         .thumbnail-container{
           position: relative;
