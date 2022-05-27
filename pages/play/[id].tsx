@@ -14,34 +14,63 @@ export type videoListProps = {
   videoList: musicObj[],
   setSelectedVideoId: any,
 }
-
-const Play: NextPage = ()=>{
-  const videoSrcs: string[] = [
-    'https://www.youtube.com/embed/2fvw0TkENHM'
-  ];
-  
-  const [videoList, setVideoList] = useState([
-    {
-      thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
-      videoId: 'ijpqjHEQF4o',
-      title: 'Lawson - Blind (Official Audio)'
+export interface youtubeSearchResponse{
+  kind: string,
+  etag: string,
+  nextPageToken: string,
+  regionCode: string,
+  pageInfo: { totalResults: number, resultsPerPage: number},
+  items: {
+    kind: string,
+    etag: string,
+    id: {
+      kind: string, 
+      videoId: string,
     },
-    {
-      thumbnail: 'https://i.ytimg.com/vi/xBfA2jQbfJg/default.jpg',
-      videoId: 'xBfA2jQbfJg',
-      title: '🌞너무 뜨거웠던 그때의 우리 | almost monday - sunburn [가사/번역/해석/Lyrics] 🧡'
-    },
-    {
-      thumbnail: 'https://i.ytimg.com/vi/FIILsSmS_nA/default.jpg',
-      videoId: 'FIILsSmS_nA',
-      title: 'BoyWithUke - Long Drives (Official Music Video)'
-    },
-    {
-      thumbnail: 'https://i.ytimg.com/vi/1LBm1lTt-rQ/default.jpg',
-      videoId: '1LBm1lTt-rQ',
-      title: 'Pink Sweat$ - I Feel Good [Official Audio]'
+    snippet: {
+      publishedAt: string,
+      channelId: string,
+      title: string,
+      description: string,
+      thumbnails: {
+        default: {
+          url:string,
+          width: number,
+          height: number,
+        },
+        medium: {
+          url:string,
+          width: number,
+          height: number,
+        },
+        high: {
+          url:string,
+          width: number,
+          height: number,
+        }
+      },
+      channelTitle: string,
+      liveBroadcastContent: string,
+      publishTime: string,
     }
-  ])
+  }[]
+}
+const Play: NextPage = ({name, musicData})=>{
+  console.log(musicData);
+  const [videoList, setVideoList] = useState(musicData.map((music:youtubeSearchResponse)=>{
+    return {
+      thumbnail: music.items[0].snippet.thumbnails.default.url,
+      videoId: music.items[0].id.videoId,
+      title: music.items[0].snippet.title
+    }
+  }));
+    // {
+    //   thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
+    //   videoId: 'ijpqjHEQF4o',
+    //   title: 'Lawson - Blind (Official Audio)'
+    // }
+
+  
   const [selectedVideoId, setSelectedVideoId] = useState<string>(videoList[0].videoId);
 
   return(
@@ -110,47 +139,46 @@ const Play: NextPage = ()=>{
     </>
   )
 }
-// export async function getStaticPaths(){
-//   const res = await fetch('http://localhost:3002/playLists');
-//   const playlist = await res.json();
-//   const paths = playlist.map((list : {id: string}) => ({
-//     params: { id: list.id.toString() },
-//   }))
+export async function getStaticPaths(){
+  const res = await fetch('http://localhost:3002/playLists');
+  const playlist = await res.json();
+  const paths = playlist.map((list : {id: string}) => ({
+    params: { id: list.id.toString() },
+  }))
   
-//   return { paths, fallback: false }
-// }
+  return { paths, fallback: false }
+}
 
-// export async function getStaticProps({params}) {
+export async function getStaticProps({params}) {
 
-//   const res = await fetch(`http://localhost:3002/playLists/${params.id}`)
-//   const playlist = await res.json();
-//   const playlistName: string = playlist.name;
-//   const videoLists:musicObj[] = [];
+  const res = await fetch(`http://localhost:3002/playLists/${params.id}`)
+  const playlist = await res.json();
   
-//   async function searchByQuery(query: string){
-//     const response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${process.env.YOUTUBE_API_KEY}`)
-//     return response;
-//   }
-//   //`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${this.key}`,
-//   playlist.musics.forEach((query: string) => {
-//     searchByQuery(query)
-//     .then(res=>res.json())
-//     .then(json=>{
-//       videoLists.push({
-//         thumbnail: json.items[0].snippet.thumbnails.default.url,
-//         videoId: json.items[0].id.videoId,
-//         title: json.items[0].snippet.title
-//       });
-//     });
-//   });
+  const requests = playlist.musics.map((query:string) => fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${process.env.YOUTUBE_API_KEY}`))
+  const musicData = await Promise.all(requests)
+  .then(responses=> Promise.all(responses.map(r=>r.json())))
+  .catch(e=>console.log(e));
   
-//   return {
-//     props:{
-//       playlistName,
-//       videoLists,
-//     }
-//   }
+  return {
+    props:{
+      name: playlist.name,
+      musicData,
+    }
+  }  
+  //`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${this.key}`,
+  // playlist.musics.forEach((query: string) => {
+  //   searchByQuery(query)
+  //   .then(res=>res.json())
+  //   .then(json=>{
+  //     videoLists.push({
+  //       thumbnail: json.items[0].snippet.thumbnails.default.url,
+  //       videoId: json.items[0].id.videoId,
+  //       title: json.items[0].snippet.title
+  //     });
+  //   });
+  // });
   
-// }
+  
+}
 
 export default Play;
