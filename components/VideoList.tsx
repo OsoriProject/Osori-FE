@@ -4,10 +4,10 @@ import { musicObj, videoListProps } from '../pages/play/[id]';
 
 export interface videoListItemProps{
   video: musicObj,
-  setSelectedVideoId: (value: string) => void,
+  setSelectedVideoId:any,
 }
 
-const VideoList = ({videoList, selectedVideoId, setSelectedVideoId} : videoListProps) => {
+const VideoList = ({videoList, setSelectedVideoId} : videoListProps) => {
   return(
     <>
       <div className="videolist-container">

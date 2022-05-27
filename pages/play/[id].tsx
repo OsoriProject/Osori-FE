@@ -12,7 +12,6 @@ export type musicObj = {
 
 export type videoListProps = {
   videoList: musicObj[],
-  selectedVideoId: string,
   setSelectedVideoId: any,
 }
 
@@ -73,8 +72,7 @@ const Play: NextPage = ()=>{
             </div>
           </div>
           <VideoList 
-            videoList={videoList} 
-            selectedVideoId={selectedVideoId} 
+            videoList={videoList}  
             setSelectedVideoId={setSelectedVideoId}
           />
         </Container>

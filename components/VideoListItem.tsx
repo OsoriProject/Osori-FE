@@ -23,7 +23,10 @@ const VideoListItem = ({video, setSelectedVideoId}: videoListItemProps) => {
           display:flex;
           margin:10px 10px 10px 10px;
           box-shadow: 1.55897px 6.2359px 7.79487px rgba(0, 0, 0, 0.3);
-          pointer: cursor;
+          cursor: pointer;
+        }
+        .videoitem-container:hover{
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
         }
         .thumbnail-container{
           position: relative;
@@ -35,6 +38,7 @@ const VideoListItem = ({video, setSelectedVideoId}: videoListItemProps) => {
           padding-left:15px;
           
         }
+        
         
       `}</style>
     </>
