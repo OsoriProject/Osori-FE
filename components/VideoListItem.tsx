@@ -15,7 +15,7 @@ const VideoListItem = ({video, setSelectedVideoId}: videoListItemProps) => {
           <Image src={video.thumbnail} layout="fill"/>
         </div>
         <div className="title-container">
-          <p>{video.title}</p>
+          <div>{video.title}</div>
         </div>
       </div>
       <style jsx>{`
@@ -32,14 +32,17 @@ const VideoListItem = ({video, setSelectedVideoId}: videoListItemProps) => {
           position: relative;
           width: 160px;
           height: 90px;
+          min-width:160px;
+          max-width:160px;
         }
         .title-container{
           display:flex;
           padding-left:15px;
-          
         }
-        
-        
+        .title-container div{
+          display:flex;
+          align-items: center;
+        }
       `}</style>
     </>
   );
