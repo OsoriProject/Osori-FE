@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import Container from "../../components/Container";
 import VideoList from "../../components/VideoList";
 
@@ -8,6 +8,16 @@ export type musicObj = {
   thumbnail: string,
   videoId: string, 
   title: string
+}
+export interface PlayList {
+  id: number,
+  name: string, 
+  user: string, 
+  musics: {
+    thumbnail: string,
+    title: string, 
+    videoId: string
+  }[],
 }
 
 export type videoListProps = {
@@ -55,15 +65,9 @@ export interface youtubeSearchResponse{
     }
   }[]
 }
-const Play: NextPage = ({name, musicData})=>{
-  console.log(musicData);
-  const [videoList, setVideoList] = useState(musicData.map((music:youtubeSearchResponse)=>{
-    return {
-      thumbnail: music.items[0].snippet.thumbnails.default.url,
-      videoId: music.items[0].id.videoId,
-      title: music.items[0].snippet.title
-    }
-  }));
+const Play: NextPage = ({name, musics})=>{
+  
+  
     // {
     //   thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
     //   videoId: 'ijpqjHEQF4o',
@@ -71,12 +75,12 @@ const Play: NextPage = ({name, musicData})=>{
     // }
 
   
-  const [selectedVideoId, setSelectedVideoId] = useState<string>(videoList[0].videoId);
+  const [selectedVideoId, setSelectedVideoId] = useState<string>(musics[0].videoId);
 
   return(
     <>
       <div className="container">
-        <h1 className="playlist-title">{"힐링 어쿠스틱 플레이리스트"}</h1>
+        <h1 className="playlist-title">{name}</h1>
         <Container height={200}>
           <div className="iframe-container">
             <iframe 
@@ -91,7 +95,7 @@ const Play: NextPage = ({name, musicData})=>{
             </iframe>
           </div>
           <div className="title-container">
-            <h2>{videoList.map(item=>{
+            <h2>{musics.map(item=>{
               if(selectedVideoId === item.videoId){
                 return <p>{item.title}</p>
               }
@@ -101,7 +105,7 @@ const Play: NextPage = ({name, musicData})=>{
             </div>
           </div>
           <VideoList 
-            videoList={videoList}  
+            videoList={musics}  
             setSelectedVideoId={setSelectedVideoId}
           />
         </Container>
@@ -153,16 +157,15 @@ export async function getStaticProps({params}) {
 
   const res = await fetch(`http://localhost:3002/playLists/${params.id}`)
   const playlist = await res.json();
-  
-  const requests = playlist.musics.map((query:string) => fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${process.env.YOUTUBE_API_KEY}`))
-  const musicData = await Promise.all(requests)
-  .then(responses=> Promise.all(responses.map(r=>r.json())))
-  .catch(e=>console.log(e));
+  // const requests = playlist.musics.map((query:string) => fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${process.env.YOUTUBE_API_KEY}`))
+  // const musicData = await Promise.all(requests)
+  // .then(responses=> Promise.all(responses.map(r=>r.json())))
+  // .catch(e=>console.log(e));
   
   return {
     props:{
       name: playlist.name,
-      musicData,
+      musics: playlist.musics
     }
   }  
   //`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${this.key}`,

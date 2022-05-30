@@ -1,6 +1,9 @@
 import React from 'react';
-
-const Container = ({children, height} : {children:JSX.Element | JSX.Element[], height: number | null}) => {
+export interface ContainerProps{
+  children: JSX.Element | JSX.Element[]
+  height?: number,
+}
+const Container = ({children, height}: ContainerProps) => {
   return (
     <>
       <div className="container">
