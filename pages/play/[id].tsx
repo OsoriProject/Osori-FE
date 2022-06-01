@@ -2,7 +2,9 @@ import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
 import Container from "../../components/Container";
+import Modal from "../../components/Modal";
 import VideoList from "../../components/VideoList";
+import { ModalProps } from "../../components/Modal";
 
 export type musicObj = {
   thumbnail: string,
@@ -76,6 +78,7 @@ const Play: NextPage = ({name, musics})=>{
 
   
   const [selectedVideoId, setSelectedVideoId] = useState<string>(musics[0].videoId);
+  const [showModal, setShowModal] = useState(false);
 
   return(
     <>
@@ -100,7 +103,7 @@ const Play: NextPage = ({name, musics})=>{
                 return <p>{item.title}</p>
               }
             })}</h2>
-            <div className="icon-wrapper">
+            <div className="icon-wrapper" onClick={()=>{setShowModal(true)}}>
               <Image src="/icons/three_dots.svg" layout="fill" />
             </div>
           </div>
@@ -109,6 +112,7 @@ const Play: NextPage = ({name, musics})=>{
             setSelectedVideoId={setSelectedVideoId}
           />
         </Container>
+        <Modal title={"플레이리스트를 저장할까요?"} proceedText={"네, 저장할래요"} retreatText={"아니오, 다음에 할래요"}/>
       </div>
       <style jsx>{`
         .container{
