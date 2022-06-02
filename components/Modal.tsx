@@ -1,38 +1,55 @@
 import React from 'react';
-import Button from './Button';
 export interface ModalProps{
   title: string, 
   proceedText?: string, 
   retreatText?: string,
+  onClickProceed: any,
+  onClickRetreat: any,
 }
-const Modal = ({title, proceedText="예", retreatText="아니오"}: ModalProps) => {
+const Modal = ({title, proceedText="예", retreatText="아니오", onClickProceed, onClickRetreat}: ModalProps) => {
   return(
     <>
+      <div className="background">
+      </div>
       <div className="modal-container">
         <div className="title-container">
           {title}
         </div>
         <div className="button-container">
           <div className="button-wrapper">
-            <button className="proceed-button">
+            <button className="proceed-button" onClick={onClickProceed}>
               {proceedText}
             </button>
           </div>
           <div className="button-wrapper">
-            <button className="retreat-button">
+            <button className="retreat-button" onClick={onClickRetreat}>
               {retreatText}
             </button>
           </div>
         </div>
       </div>
       <style jsx>{`
+        .background{
+          position:fixed;
+          top:0;
+          left:0;
+          height:100vh;
+          width:100vw;
+          background-color:black;
+          opacity:0.5;
+        }
         .modal-container{
-          position: absolute;
+          position:fixed;
+          top:50vh;
+          left:50vw;
           background-color: #F4F4F4;
           width:400px;
+          margin-left: -200px;
           height: 220px;
           border-radius:45px;
+          margin-top: -110px;
           box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
+          opacity:1 !important;
         }
         .title-container{
           height: 50%;
