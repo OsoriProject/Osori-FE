@@ -1,7 +1,8 @@
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../../components/Container";
+import Modal from "../../components/Modal";
 import VideoList from "../../components/VideoList";
 
 export type musicObj = {
@@ -76,7 +77,18 @@ const Play: NextPage = ({name, musics})=>{
 
   
   const [selectedVideoId, setSelectedVideoId] = useState<string>(musics[0].videoId);
-
+  const [showModal, setShowModal] = useState(false);
+  const handleSavePlaylist = ()=>{
+    alert("플레이리스트를 저장하였습니다.");
+    setShowModal(false);
+  }
+  useEffect(()=>{
+    if(showModal){
+      document.body.style.overflow="hidden";
+    }else{
+      document.body.style.overflow="scroll";
+    }
+  }, [showModal])
   return(
     <>
       <div className="container">
@@ -100,7 +112,7 @@ const Play: NextPage = ({name, musics})=>{
                 return <p>{item.title}</p>
               }
             })}</h2>
-            <div className="icon-wrapper">
+            <div className="icon-wrapper" onClick={()=>{setShowModal(true)}}>
               <Image src="/icons/three_dots.svg" layout="fill" />
             </div>
           </div>
@@ -109,6 +121,14 @@ const Play: NextPage = ({name, musics})=>{
             setSelectedVideoId={setSelectedVideoId}
           />
         </Container>
+        {showModal && 
+          <Modal 
+            title={"플레이리스트를 저장할까요?"} 
+            proceedText={"네, 저장할래요"} 
+            retreatText={"아니오, 다음에 할래요"}
+            onClickProceed={()=>{handleSavePlaylist()}}
+            onClickRetreat={()=>{setShowModal(false)}}
+        />}
       </div>
       <style jsx>{`
         .container{
