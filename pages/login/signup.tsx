@@ -1,14 +1,29 @@
+import Error from "next/error";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { postSignUp } from "../../api/AuthApi";
 import Container from "../../components/Container";
 
 const Register = () =>{
   const inputRef = useRef<HTMLInputElement>(null);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [tmpPassword, setTmpPassword] = useState("");
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
     }
   },[])
+  const handleSignup = async ()=>{
+    try{
+      const res = await postSignUp(id, password, nickname);
+      
+    }catch(e:any){
+      alert(e.response.data.message);
+    }
+   
+  }
   return (
     <>
       <div className="container">
@@ -28,29 +43,34 @@ const Register = () =>{
             이메일, 비밀번호로 간편 회원가입 하세요. 
           </p>
           <div className="login-form">
-            <form method="post">
-              <div className="text-field">
-                <input ref={inputRef} type="text" required />
-                <span></span>
-                <label>이메일</label>
-              </div>
-              <div className="text-field">
-                <input type="password" required />
-                <span></span>
-                <label>비밀번호</label>
-              </div>
-              <div className="text-field">
-                <input type="password" required />
-                <span></span>
-                <label>비밀번호 확인</label>
-              </div>
-              <div className="text-field">
-                <input type="text" required />
-                <span></span>
-                <label>닉네임</label>
-              </div>
-              <input type="submit" value="Sign up" />
-            </form>
+            <div className="text-field">
+              <input ref={inputRef} type="text" required onChange={(e)=>{setId(e.target.value)}}/>
+              <span></span>
+              <label>이메일</label>
+            </div>
+            <div className="text-field">
+              <input type="password" required onChange={(e)=>{setPassword(e.target.value)}}/>
+              <span></span>
+              <label>비밀번호</label>
+            </div>
+            <div className="text-field">
+              <input type="password" required onChange={(e)=>{setTmpPassword(e.target.value)}}/>
+              <span></span>
+              <label>비밀번호 확인</label>
+            </div>
+            <div className="text-field">
+              <input type="text" required onChange={(e)=>{setNickname(e.target.value)}}/>
+              <span></span>
+              <label>닉네임</label>
+            </div>
+            <button onClick={ async ()=>{
+              if(password === tmpPassword){
+                await handleSignup();
+              }else{
+                alert("비밀번호가 일치하지 않습니다.");
+              }
+            }}>Sign Up</button>
+           
           </div>
         </Container>
       </div>
@@ -149,7 +169,7 @@ const Register = () =>{
         .pass:hover{
           text-decoration: underline;
         }
-        input[type="submit"]{
+        button{
           margin-top:30px;
           width:100%;
           height:50px;
@@ -162,7 +182,7 @@ const Register = () =>{
           cursor:pointer;
           outline:none;
         }
-        input[type="submit"]:hover{
+        button:hover{
           border-color:#B695F9;
           transition: 0.5s;
         }

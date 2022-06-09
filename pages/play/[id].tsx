@@ -1,4 +1,4 @@
-import { GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Container from "../../components/Container";
@@ -66,16 +66,12 @@ export interface youtubeSearchResponse{
     }
   }[]
 }
-const Play: NextPage = ({name, musics})=>{
-  
-  
+const Play: NextPage = ({name, musics}:any)=>{
     // {
     //   thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
     //   videoId: 'ijpqjHEQF4o',
     //   title: 'Lawson - Blind (Official Audio)'
     // }
-
-  
   const [selectedVideoId, setSelectedVideoId] = useState<string>(musics[0].videoId);
   const [showModal, setShowModal] = useState(false);
   const handleSavePlaylist = ()=>{
@@ -107,7 +103,7 @@ const Play: NextPage = ({name, musics})=>{
             </iframe>
           </div>
           <div className="title-container">
-            <h2>{musics.map(item=>{
+            <h2>{musics.map((item: {thumbnail: string, videoId: string, title: string})=>{
               if(selectedVideoId === item.videoId){
                 return <p>{item.title}</p>
               }
@@ -173,7 +169,7 @@ export async function getStaticPaths(){
   return { paths, fallback: false }
 }
 
-export async function getStaticProps({params}) {
+export async function getStaticProps({params}:any) {
 
   const res = await fetch(`http://localhost:3002/playLists/${params.id}`)
   const playlist = await res.json();
