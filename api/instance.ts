@@ -20,7 +20,7 @@ export const instance = () => {
     headers: {
       "Content-Type": "application/json",
       "Accept": "*/*",
-      "Access-Control-Allow-Headers": "*",
+      
     },
   });
   console.log(instance);
