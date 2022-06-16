@@ -27,7 +27,12 @@ export const instance = () => {
   instance.interceptors.request.use(
     function (config) {
       // 요청 바로 직전
-
+      if(typeof window !== 'undefined'){
+        if(localStorage.getItem("authToken")){
+          config.headers["Authorization"] = "Bearer " + JSON.parse(localStorage.getItem("authToken")).acessToken;
+        }
+      }
+      
       return config;
     },
     function (error) {
