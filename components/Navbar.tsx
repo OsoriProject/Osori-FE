@@ -27,11 +27,21 @@ function NavBar(){
     setMenu(false);
     setNavbar(false);
   }
+  const handleLogout = ()=>{
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('authToken');
+    setMenu(false);
+    setNavbar(false);
+  }
   useEffect(()=>{
     window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
     return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
   }, [])
-  
+  useEffect(()=>{
+    if(localStorage.getItem('authToken')){
+      setIsLogin(true);
+    }
+  })
   return (
     <nav className={navbar ? "navbar active" : "navbar"}>
       <div className="nav-brand">
@@ -45,9 +55,12 @@ function NavBar(){
           <a className={router.pathname==="/chat/[id]" ? "selected" : ""} onClick={handleClickLink}>CHAT</a>
         </Link>
         {isLogin ? 
-          <Link href="/mylists">
-            <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleClickLink}>MYLISTS</a>
-          </Link>
+          <>
+            <Link href="/mylists">
+              <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleClickLink}>MYLISTS</a>
+            </Link>
+            <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleLogout} href="/">LOGOUT</a>
+          </>
           :
           <Link href="/login">
             <a className={router.pathname==="/login" ? "selected" : ""} onClick={handleClickLink}>LOGIN</a>

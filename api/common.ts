@@ -1,13 +1,7 @@
 import { wrapRequest, instance } from "./instance";
 
-export interface CommonRequest{
-  url: string,
-  data: object,
-}
-
 // 기본 post 요청
 export const postRequest = wrapRequest(async (url:string, data:object) => {
-  console.log(url, data);
   return instance().post(url, data);
 });
 

@@ -1,8 +1,9 @@
-import Error from "next/error";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { postSignUp } from "../../api/AuthApi";
 import Container from "../../components/Container";
+import Modal from "../../components/Modal";
 
 const Register = () =>{
   const inputRef = useRef<HTMLInputElement>(null);
@@ -10,15 +11,24 @@ const Register = () =>{
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [tmpPassword, setTmpPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
     }
   },[])
+  useEffect(()=>{
+    if(showModal){
+      document.body.style.overflow="hidden";
+    }else{
+      document.body.style.overflow="scroll";
+    }
+  }, [showModal])
   const handleSignup = async ()=>{
     try{
-      const res = await postSignUp(id, password, nickname);
-      
+      await postSignUp(id, password, nickname);
+      setShowModal(true);
     }catch(e:any){
       alert(e.response.data.message);
     }
@@ -73,6 +83,14 @@ const Register = () =>{
            
           </div>
         </Container>
+        {showModal && 
+          <Modal 
+            title={"회원가입이 완료되었습니다"} 
+            proceedText={"로그인하기"} 
+            retreatText={"다음에 할게요"}
+            onClickProceed={()=>{router.push('/login')}}
+            onClickRetreat={()=>{setShowModal(false)}}
+        />}
       </div>
       <style jsx>{`
         .container{

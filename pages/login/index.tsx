@@ -3,18 +3,26 @@ import Container from "../../components/Container";
 import Link from "next/link";
 import {useEffect, useRef, useState } from "react";
 import { postSignIn } from "../../api/AuthApi";
+import { useRouter } from "next/router";
 
 const Login = ()=>{
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
+
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
     }
   }, [])
   const handleLogin = async ()=>{
-    await postSignIn(id, password);
+    const res = await postSignIn(id, password);
+    localStorage.setItem('nickname', JSON.stringify(res.nickname));  
+    localStorage.setItem('authToken', JSON.stringify(res.token)); 
+    router.push("/"); 
   }
   
   return (
