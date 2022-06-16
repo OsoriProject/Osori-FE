@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '../../components/Container';
 import MyList from '../../components/MyList';
 import { PlayList } from '../play/[id]';
@@ -17,10 +17,14 @@ export interface MyListProps{
 }
 
 const index: NextPage = ({results}) => {
+  const [nickName, setNickName] = useState(null);
+  useEffect(()=>{
+    setNickName(JSON.parse(localStorage.getItem("nickname")));
+  }, [])
   return (
     <>
       <div className="container">
-        <h1 className="playlist-title">내 플레이리스트</h1>
+        <h1 className="playlist-title">{nickName}님의 플레이리스트</h1>
         <Container height={200}>
           <MyList playLists={results} />
         </Container>
