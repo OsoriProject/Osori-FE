@@ -1,14 +1,39 @@
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { postSignUp } from "../../api/AuthApi";
 import Container from "../../components/Container";
+import Modal from "../../components/Modal";
 
 const Register = () =>{
   const inputRef = useRef<HTMLInputElement>(null);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [tmpPassword, setTmpPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
     }
   },[])
+  useEffect(()=>{
+    if(showModal){
+      document.body.style.overflow="hidden";
+    }else{
+      document.body.style.overflow="scroll";
+    }
+  }, [showModal])
+  const handleSignup = async ()=>{
+    try{
+      await postSignUp(id, password, nickname);
+      setShowModal(true);
+    }catch(e:any){
+      alert(e.response.data.message);
+    }
+   
+  }
   return (
     <>
       <div className="container">
@@ -28,31 +53,44 @@ const Register = () =>{
             이메일, 비밀번호로 간편 회원가입 하세요. 
           </p>
           <div className="login-form">
-            <form method="post">
-              <div className="text-field">
-                <input ref={inputRef} type="text" required />
-                <span></span>
-                <label>이메일</label>
-              </div>
-              <div className="text-field">
-                <input type="password" required />
-                <span></span>
-                <label>비밀번호</label>
-              </div>
-              <div className="text-field">
-                <input type="password" required />
-                <span></span>
-                <label>비밀번호 확인</label>
-              </div>
-              <div className="text-field">
-                <input type="text" required />
-                <span></span>
-                <label>닉네임</label>
-              </div>
-              <input type="submit" value="Sign up" />
-            </form>
+            <div className="text-field">
+              <input ref={inputRef} type="text" required onChange={(e)=>{setId(e.target.value)}}/>
+              <span></span>
+              <label>이메일</label>
+            </div>
+            <div className="text-field">
+              <input type="password" required onChange={(e)=>{setPassword(e.target.value)}}/>
+              <span></span>
+              <label>비밀번호</label>
+            </div>
+            <div className="text-field">
+              <input type="password" required onChange={(e)=>{setTmpPassword(e.target.value)}}/>
+              <span></span>
+              <label>비밀번호 확인</label>
+            </div>
+            <div className="text-field">
+              <input type="text" required onChange={(e)=>{setNickname(e.target.value)}}/>
+              <span></span>
+              <label>닉네임</label>
+            </div>
+            <button onClick={ async ()=>{
+              if(password === tmpPassword){
+                await handleSignup();
+              }else{
+                alert("비밀번호가 일치하지 않습니다.");
+              }
+            }}>Sign Up</button>
+           
           </div>
         </Container>
+        {showModal && 
+          <Modal 
+            title={"회원가입이 완료되었습니다"} 
+            proceedText={"로그인하기"} 
+            retreatText={"다음에 할게요"}
+            onClickProceed={()=>{router.push('/login')}}
+            onClickRetreat={()=>{setShowModal(false)}}
+        />}
       </div>
       <style jsx>{`
         .container{
@@ -149,7 +187,7 @@ const Register = () =>{
         .pass:hover{
           text-decoration: underline;
         }
-        input[type="submit"]{
+        button{
           margin-top:30px;
           width:100%;
           height:50px;
@@ -162,7 +200,7 @@ const Register = () =>{
           cursor:pointer;
           outline:none;
         }
-        input[type="submit"]:hover{
+        button:hover{
           border-color:#B695F9;
           transition: 0.5s;
         }

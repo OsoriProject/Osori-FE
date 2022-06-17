@@ -1,15 +1,30 @@
 import Image from "next/image";
 import Container from "../../components/Container";
 import Link from "next/link";
-import { MutableRefObject, useEffect, useRef } from "react";
+import {useEffect, useRef, useState } from "react";
+import { postSignIn } from "../../api/AuthApi";
+import { useRouter } from "next/router";
 
 const Login = ()=>{
+
   const inputRef = useRef<HTMLInputElement>(null);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+
+  const router = useRouter();
+
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
     }
   }, [])
+  const handleLogin = async ()=>{
+    const res = await postSignIn(id, password);
+    localStorage.setItem('nickname', JSON.stringify(res.nickname));  
+    localStorage.setItem('authToken', JSON.stringify(res.token)); 
+    router.push("/"); 
+  }
+  
   return (
     <>
       <div className="container">
@@ -29,28 +44,26 @@ const Login = ()=>{
             회원가입시 입력하신 정보로 로그인 하세요.
           </p>
           <div className="login-form">
-            <form method="post">
-              <div className="text-field">
-                <input ref={inputRef} type="text" required />
-                <span></span>
-                <label>이메일</label>
-              </div>
-              <div className="text-field">
-                <input type="password" required />
-                <span></span>
-                <label>비밀번호</label>
-              </div>
-              <div className="pass">
-                비밀번호를 잊으셨나요?
-              </div>
-              <input type="submit" value="Login" />
-              <div className="signup-link">
-                계정이 없으신가요? 
-                <Link href="/login/signup">
-                  <a href="#">회원가입</a>
-                </Link>
-              </div>
-            </form>
+            <div className="text-field">
+              <input ref={inputRef} type="text" required onChange={(e)=>{setId(e.target.value)}}/>
+              <span></span>
+              <label>이메일</label>
+            </div>
+            <div className="text-field">
+              <input type="password" required onChange={(e)=>{setPassword(e.target.value)}}/>
+              <span></span>
+              <label>비밀번호</label>
+            </div>
+            <div className="pass">
+              비밀번호를 잊으셨나요?
+            </div>
+            <button type="submit" value="Login" onClick={handleLogin}>Log in</button>
+            <div className="signup-link">
+              계정이 없으신가요? 
+              <Link href="/login/signup">
+                <a href="#">회원가입</a>
+              </Link>
+            </div>
           </div>
         </Container>
       </div>
@@ -149,7 +162,7 @@ const Login = ()=>{
         .pass:hover{
           text-decoration: underline;
         }
-        input[type="submit"]{
+        button{
           margin-top:30px;
           width:100%;
           height:50px;
@@ -162,7 +175,7 @@ const Login = ()=>{
           cursor:pointer;
           outline:none;
         }
-        input[type="submit"]:hover{
+        button:hover{
           border-color:#B695F9;
           transition: 0.5s;
         }
