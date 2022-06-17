@@ -14,6 +14,7 @@ export interface PlayList {
   id: number,
   name: string, 
   user: string, 
+  thumbnail: string,
   musics: {
     thumbnail: string,
     title: string, 

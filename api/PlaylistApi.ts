@@ -1,21 +1,21 @@
 import { deleteRequest, getRequest, postRequest } from "./common";
 
-export const getPlaylistsRequest = async (userid: string) => {
-  const response = await getRequest(`/playlist/${userid}`);
+export const getPlaylistsRequest = async () => {
+  const response = await getRequest(`/playlist`);
   return response;
 };
 
-export const getPlaylistDetailRequest = async (userid:string, playlistId:number) => {
-  const response = await getRequest(`/playlist/${userid}/${playlistId}`);
+export const getPlaylistDetailRequest = async (playlistId: number) => {
+  const response = await getRequest(`/playlist/${playlistId}`);
   return response;
 };
 
-export const postSavePlaylistRequest = async (userid:string, name:string, musics:any) => {
-  const response = await postRequest(`/playlist/${userid}`, { name, musics });
+export const postSavePlaylistRequest = async (name: string, musics: object[]) => {
+  const response = await postRequest(`/playlist`, { name, musics });
   return response;
 };
 
-export const deletePlaylistsRequest = async (userid:string, playlistId:number) => {
-  const response = await deleteRequest(`/playlist/${userid}/${playlistId}`);
+export const deletePlaylistsRequest = async (playlistId: number) => {
+  const response = await deleteRequest(`/playlist/${playlistId}`);
   return response;
 };

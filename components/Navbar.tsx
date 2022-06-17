@@ -56,10 +56,10 @@ function NavBar(){
         </Link>
         {isLogin ? 
           <>
-            <Link href="/mylists">
-              <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleClickLink}>MYLISTS</a>
+            <Link href="/mylist">
+              <a className={router.pathname==="/mylist" ? "selected" : ""} onClick={handleClickLink}>MYLIST</a>
             </Link>
-            <a className={router.pathname==="/mylist/1" ? "selected" : ""} onClick={handleLogout} href="/">LOGOUT</a>
+            <a className={router.pathname==="/mylist" ? "selected" : ""} onClick={handleLogout} href="/">LOGOUT</a>
           </>
           :
           <Link href="/login">

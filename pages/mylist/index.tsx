@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
+import { getPlaylistsRequest } from '../../api/PlaylistApi';
 import Container from '../../components/Container';
 import MyList from '../../components/MyList';
 import { PlayList } from '../play/[id]';
@@ -16,18 +17,33 @@ export interface MyListProps{
   playLists: PlayList[],
 }
 
-const index: NextPage = ({results}) => {
+const Mylist: NextPage = ({results}:any) => {
   const [nickName, setNickName] = useState(null);
+  const [playLists, setPlayLists] = useState([]);
+  const getPlayList = async ()=>{
+    try {
+      const result = await getPlaylistsRequest();
+      setPlayLists(result.playlists);
+      console.log(result)
+    } catch (e) {
+      console.log(e);
+    }
+  }
   useEffect(()=>{
     setNickName(JSON.parse(localStorage.getItem("nickname")));
+    getPlayList();
   }, [])
   return (
     <>
       <div className="container">
         <h1 className="playlist-title">{nickName}님의 플레이리스트</h1>
-        <Container height={200}>
-          <MyList playLists={results} />
-        </Container>
+        {playLists.length !== 0 ?  
+          <Container height={200}>
+            <MyList playLists={playLists} />
+          </Container>
+          :
+          <h1 style={{marginTop: "50px"}}>아직 저장된 플레이리스트가 없어요 😔</h1>
+        }
       </div>
       <style jsx>{`
         .container{
@@ -46,18 +62,4 @@ const index: NextPage = ({results}) => {
   );
 }
 
-export async function getServerSideProps({params}:{params: number}){
-
-	const results = await (
-    await fetch(
-    // 이 부분에서 로그인된 유저 아이디가 매치되는 플레이리스트들만 따로 받아온다. /playlist/userId로 get요청
-    `http://localhost:3002/mylists/`
-  )).json();
-	
-	return {
-		props:{
-			results,
-		}	
-	};
-}
-export default index;
+export default Mylist;
