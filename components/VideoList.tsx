@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import VideoListItem from './VideoListItem';
-import { musicObj, videoListProps } from '../pages/play/[id]';
+import { musicObj, videoListProps } from '../pages/playlist/[id]';
 
 export interface videoListItemProps{
   video: musicObj,

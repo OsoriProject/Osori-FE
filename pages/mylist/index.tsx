@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getPlaylistsRequest } from '../../api/PlaylistApi';
 import Container from '../../components/Container';
 import MyList from '../../components/MyList';
-import { PlayList } from '../play/[id]';
+import { PlayList } from '../playlist/[id]';
 
 export interface MyListItemProps{
   index: number,
@@ -18,7 +18,9 @@ export interface MyListProps{
 }
 
 const Mylist: NextPage = ({results}:any) => {
+
   const [nickName, setNickName] = useState(null);
+
   const [playLists, setPlayLists] = useState([]);
   const getPlayList = async ()=>{
     try {

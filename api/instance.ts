@@ -29,10 +29,8 @@ export const instance = () => {
       if(typeof window !== 'undefined'){
         if(localStorage.getItem("authToken")){
           config.headers["Authorization"] = "Bearer " + JSON.parse(localStorage.getItem("authToken")).accessToken;
-          
         }
       }
-      
       return config;
     },
     function (error) {

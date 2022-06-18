@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { checkLogin } from "../api/AuthApi";
+import Modal from "./Modal";
 
 function NavBar(){
   const router = useRouter();
@@ -11,6 +13,8 @@ function NavBar(){
   const [menu, setMenu] = useState(false);
   // is Logged in?
   const [isLogin, setIsLogin] = useState(false);
+  // modal show
+  const [showLoginModal, setShowLoginModal] = useState(false);
   //navbar background change resposive to scroll
   const changeNavbarBackgroundOnScroll = ()=>{
     setNavbar(window.scrollY >= 1 ? true : false);
@@ -30,9 +34,28 @@ function NavBar(){
   const handleLogout = ()=>{
     localStorage.removeItem('nickname');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
     setMenu(false);
     setNavbar(false);
   }
+  //chat tab click 
+  const handleClickChatMenu = ()=>{
+    setMenu(false);
+    setNavbar(false);
+    if(!checkLogin()){
+      setShowLoginModal(true);
+      return;
+    }else{
+      router.push("/chat");
+    }
+  }
+  useEffect(()=>{
+    if(showLoginModal){
+      document.body.style.overflow="hidden";
+    }else{
+      document.body.style.overflow="scroll";
+    }
+  }, [showLoginModal])
   useEffect(()=>{
     window.addEventListener('scroll', changeNavbarBackgroundOnScroll);
     return () => window.removeEventListener('scroll', changeNavbarBackgroundOnScroll);
@@ -51,15 +74,13 @@ function NavBar(){
         <Link href="/" >
           <a className={router.pathname==="/" ? "selected" : ""} onClick={handleClickLink}>ABOUT</a>
         </Link>
-        <Link href="/chat/1" >
-          <a className={router.pathname==="/chat/[id]" ? "selected" : ""} onClick={handleClickLink}>CHAT</a>
-        </Link>
+        <a className={router.pathname==="/chat" ? "selected" : ""} onClick={handleClickChatMenu}>CHAT</a>
         {isLogin ? 
           <>
             <Link href="/mylist">
               <a className={router.pathname==="/mylist" ? "selected" : ""} onClick={handleClickLink}>MYLIST</a>
             </Link>
-            <a className={router.pathname==="/mylist" ? "selected" : ""} onClick={handleLogout} href="/">LOGOUT</a>
+            <a onClick={handleLogout} href="/">LOGOUT</a>
           </>
           :
           <Link href="/login">
@@ -67,6 +88,18 @@ function NavBar(){
           </Link>
         }
       </div>
+      {showLoginModal && 
+        <Modal 
+          title={"로그인이 필요합니다."} 
+          proceedText={"로그인하기"} 
+          retreatText={"다음에 할게요"}
+          onClickProceed={()=>{
+            router.push('/login');
+            setShowLoginModal(false);
+          }}
+          onClickRetreat={()=>{setShowLoginModal(false)}}
+        />
+      }
       <a 
         className="nav-toggle-btn"
         onClick={()=>{clickMenu()}}
@@ -104,6 +137,7 @@ function NavBar(){
           text-decoration:none;
           margin-left:2.3em;
           color:white;
+          cursor: pointer;
         }
         a:hover{
           text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -145,6 +179,7 @@ function NavBar(){
             text-align:center;
             width:100%;
             padding:5px;
+            cursor: pointer;
           }
           .nav-menu a:hover{
             background-color:violet;

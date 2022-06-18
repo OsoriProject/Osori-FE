@@ -22,6 +22,7 @@ const Login = ()=>{
     const res = await postSignIn(id, password);
     localStorage.setItem('nickname', JSON.stringify(res.nickname));  
     localStorage.setItem('authToken', JSON.stringify(res.token)); 
+    localStorage.setItem('userId', JSON.stringify(res.id));
     router.push("/"); 
   }
   

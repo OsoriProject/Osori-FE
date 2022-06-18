@@ -1,11 +1,11 @@
 import { getRequest, postRequest } from "./common";
 
-export const getMessages = async (userid:string) => {
-  const response = await getRequest(`/chat/${userid}`);
+export const getMessages = async () => {
+  const response = await getRequest(`/chat`);
   return response;
 };
 
-export const postMessage = async (userid:string, content:string) => {
-  const response = await postRequest(`/chat/${userid}`, { content });
+export const postMessage = async (content:string) => {
+  const response = await postRequest(`/chat`, { content });
   return response;
 };

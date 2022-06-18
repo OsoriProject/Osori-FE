@@ -1,5 +1,5 @@
 import React from 'react';
-import { MyListItemProps } from '../pages/mylist/[userId]';
+import { MyListItemProps } from '../pages/mylist';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 

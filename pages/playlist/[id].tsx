@@ -67,7 +67,7 @@ export interface youtubeSearchResponse{
     }
   }[]
 }
-const Play: NextPage = ({name, musics}:any)=>{
+const Playlist: NextPage = ({name, musics}:any)=>{
     // {
     //   thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
     //   videoId: 'ijpqjHEQF4o',
@@ -201,4 +201,4 @@ export async function getStaticProps({params}:any) {
   
 }
 
-export default Play;
+export default Playlist;
