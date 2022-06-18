@@ -7,6 +7,7 @@ import { chatObj } from "../../components/ChatElem";
 import { ContainerProps } from "../../components/Container";
 import { checkLogin } from "../../api/AuthApi";
 import { getMessages, postMessage } from "../../api/MessageApi";
+import ChatContainer from "../../components/ChatContainer";
 
 const Chat : NextPage = () => {
   const [msg, setMsg] = useState("");
@@ -69,11 +70,7 @@ const Chat : NextPage = () => {
             <p>Today</p>
             <div id="line"></div>
           </div>
-          <div className="chat-screen">
-            {msgList && msgList.map((msgObj)=>{
-              return <ChatElem key={msgObj.id} chatElemProps={msgObj} />
-            })}
-          </div>
+          <ChatContainer msgList={msgList} />
           <div className="chat-form">
             <input
               type="text"
@@ -135,6 +132,7 @@ const Chat : NextPage = () => {
           display:flex;
           align-items:center;
           justify-content:center;
+          padding-top:15px;
         }
         .chat-input{
           height: 40px;
