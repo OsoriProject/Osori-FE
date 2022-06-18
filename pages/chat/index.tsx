@@ -37,6 +37,8 @@ const Chat : NextPage = () => {
     } catch (e) {
       console.log(e);
     }
+    inputRef.current.value = "";
+    inputRef.current.focus();
   };
   useEffect(()=>{
     if(inputRef.current){
@@ -72,10 +74,7 @@ const Chat : NextPage = () => {
               return <ChatElem key={msgObj.id} chatElemProps={msgObj} />
             })}
           </div>
-          <form onSubmit={onSend} className="chat-form">
-            <input 
-              type="hidden"
-            />
+          <div className="chat-form">
             <input
               type="text"
               ref={inputRef}
@@ -83,12 +82,12 @@ const Chat : NextPage = () => {
               placeholder="우울할 때 들을만한 음악 추천해줘!"
               onChange={(e)=>{onChangeMsg(e.target.value)}}
             />
-            <button type="submit">
-              <div style={{position:"relative", width:"34px", height:"34px"}}>
-                <Image src="/images/send.svg" layout="fill"/>
-              </div>
-            </button>
-          </form>
+            
+            <div style={{position:"relative", width:"34px", height:"34px"}} onClick={onSend}>
+              <Image src="/images/send.svg" layout="fill"/>
+            </div>
+           
+          </div>
         </Container>
       </div>
       <style jsx>{`
