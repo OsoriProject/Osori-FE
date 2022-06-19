@@ -1,6 +1,9 @@
 import { NextPage } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { getChatById } from "../../api/MessageApi";
+import { postSavePlaylistRequest } from "../../api/PlaylistApi";
 import Container from "../../components/Container";
 import Modal from "../../components/Modal";
 import VideoList from "../../components/VideoList";
@@ -10,10 +13,12 @@ export type musicObj = {
   videoId: string, 
   title: string
 }
+
 export interface PlayList {
   id: number,
   name: string, 
   user: string, 
+  thumbnail: string,
   musics: {
     thumbnail: string,
     title: string, 
@@ -25,58 +30,27 @@ export type videoListProps = {
   videoList: musicObj[],
   setSelectedVideoId: any,
 }
-export interface youtubeSearchResponse{
-  kind: string,
-  etag: string,
-  nextPageToken: string,
-  regionCode: string,
-  pageInfo: { totalResults: number, resultsPerPage: number},
-  items: {
-    kind: string,
-    etag: string,
-    id: {
-      kind: string, 
-      videoId: string,
-    },
-    snippet: {
-      publishedAt: string,
-      channelId: string,
-      title: string,
-      description: string,
-      thumbnails: {
-        default: {
-          url:string,
-          width: number,
-          height: number,
-        },
-        medium: {
-          url:string,
-          width: number,
-          height: number,
-        },
-        high: {
-          url:string,
-          width: number,
-          height: number,
-        }
-      },
-      channelTitle: string,
-      liveBroadcastContent: string,
-      publishTime: string,
-    }
-  }[]
-}
-const Play: NextPage = ({name, musics}:any)=>{
+
+const Play: NextPage = ({id}: any)=>{
     // {
     //   thumbnail: 'https://i.ytimg.com/vi/ijpqjHEQF4o/default.jpg',
     //   videoId: 'ijpqjHEQF4o',
     //   title: 'Lawson - Blind (Official Audio)'
     // }
-  const [selectedVideoId, setSelectedVideoId] = useState<string>(musics[0].videoId);
+  const [selectedVideoId, setSelectedVideoId] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const handleSavePlaylist = ()=>{
-    alert("플레이리스트를 저장하였습니다.");
-    setShowModal(false);
+  const router = useRouter();
+  const [playlist, setPlaylist] = useState([]);
+  const [playlistId, setPlaylistId] = useState(-1);
+  const handleSavePlaylist = async ()=>{
+    try{
+      await postSavePlaylistRequest(`${JSON.parse(localStorage.getItem("nickname"))}의 플레이리스트 ${Date.now()}`, playlistId);
+      document.body.style.overflow = "scroll";
+      alert('플레이리스트를 저장하였습니다!');
+    }catch(e){
+      console.log(e);
+    }
+    router.push('/mylist');
   }
   useEffect(()=>{
     if(showModal){
@@ -84,39 +58,57 @@ const Play: NextPage = ({name, musics}:any)=>{
     }else{
       document.body.style.overflow="scroll";
     }
+    
   }, [showModal])
+  useEffect(()=>{
+    const getMusics = async ()=>{
+      const res = await getChatById(id);
+      setPlaylist(res.playlist);
+      setSelectedVideoId(res.playlist[0].videoId);
+      setPlaylistId(res.playlistId);
+    }
+    try{
+      getMusics();
+    }catch(e){
+      console.log(e);
+    }
+  }, [])
   return(
     <>
       <div className="container">
-        <h1 className="playlist-title">{name}</h1>
-        <Container height={200}>
-          <div className="iframe-container">
-            <iframe 
-              style={{"borderRadius" : "35px 35px 0 0"}} 
-              width="100%" 
-              height="315" 
-              src={`https://youtube.com/embed/${selectedVideoId}`} 
-              title="YouTube video player" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowFullScreen={true}>
-            </iframe>
-          </div>
-          <div className="title-container">
-            <h2>{musics.map((item: {thumbnail: string, videoId: string, title: string})=>{
-              if(selectedVideoId === item.videoId){
-                return <p>{item.title}</p>
-              }
-            })}</h2>
-            <div className="icon-wrapper" onClick={()=>{setShowModal(true)}}>
-              <Image src="/icons/three_dots.svg" layout="fill" />
+        <h1 className="playlist-title"></h1>
+        {playlist.length !== 0 && 
+          <Container height={200}>
+            <div className="iframe-container">
+              <iframe 
+                style={{"borderRadius" : "35px 35px 0 0"}} 
+                width="100%" 
+                height="315" 
+                src={`https://youtube.com/embed/${selectedVideoId}`} 
+                title="YouTube video player" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen={true}>
+              </iframe>
             </div>
-          </div>
-          <VideoList 
-            videoList={musics}  
-            setSelectedVideoId={setSelectedVideoId}
-          />
-        </Container>
+            <div className="title-container">
+              <h2>{playlist.map((item: {thumbnail: string, videoId: string, title: string})=>{
+                if(selectedVideoId === item.videoId){
+                  return <p>{item.title}</p>
+                }
+              })}</h2>
+              <div className="icon-wrapper" onClick={()=>{
+                setShowModal(true);
+              }}>
+                <Image src="/icons/plus-circle.svg" layout="fill" />
+              </div>
+            </div>
+            <VideoList 
+              videoList={playlist}  
+              setSelectedVideoId={setSelectedVideoId}
+            />
+          </Container>
+        }
         {showModal && 
           <Modal 
             title={"플레이리스트를 저장할까요?"} 
@@ -159,45 +151,14 @@ const Play: NextPage = ({name, musics}:any)=>{
     </>
   )
 }
-export async function getStaticPaths(){
-  const res = await fetch('http://localhost:3002/playLists');
-  const playlist = await res.json();
-  const paths = playlist.map((list : {id: string}) => ({
-    params: { id: list.id.toString() },
-  }))
-  
-  return { paths, fallback: false }
-}
 
-export async function getStaticProps({params}:any) {
-
-  const res = await fetch(`http://localhost:3002/playLists/${params.id}`)
-  const playlist = await res.json();
-  // const requests = playlist.musics.map((query:string) => fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${process.env.YOUTUBE_API_KEY}`))
-  // const musicData = await Promise.all(requests)
-  // .then(responses=> Promise.all(responses.map(r=>r.json())))
-  // .catch(e=>console.log(e));
+export async function getServerSideProps({params}:any) {
   
   return {
     props:{
-      name: playlist.name,
-      musics: playlist.musics
+      id: params.id,
     }
-  }  
-  //`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}&type=video&key=${this.key}`,
-  // playlist.musics.forEach((query: string) => {
-  //   searchByQuery(query)
-  //   .then(res=>res.json())
-  //   .then(json=>{
-  //     videoLists.push({
-  //       thumbnail: json.items[0].snippet.thumbnails.default.url,
-  //       videoId: json.items[0].id.videoId,
-  //       title: json.items[0].snippet.title
-  //     });
-  //   });
-  // });
-  
-  
+  }    
 }
 
 export default Play;

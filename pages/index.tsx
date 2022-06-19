@@ -28,9 +28,11 @@ const Home: NextPage = () => {
             더욱 다채로워질 수 있도록.<br/>
             소리를 만나다, 오소리<br />
           </p>
-          <Link href="/chat/1">
+          <Link href="/chat">
             <a>
-              <Button ButtonProps={{label:"오소리와 채팅하기", fontSize:1.25}}/>
+              <div style={{width: "190px"}}>
+                <Button ButtonProps={{label:"오소리와 채팅하기", fontSize:1.25}}/>
+              </div>
             </a>
           </Link>
         </div>

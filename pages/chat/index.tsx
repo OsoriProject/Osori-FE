@@ -5,32 +5,63 @@ import ChatElem from "../../components/ChatElem";
 import Container from "../../components/Container";
 import { chatObj } from "../../components/ChatElem";
 import { ContainerProps } from "../../components/Container";
+import { checkLogin } from "../../api/AuthApi";
+import { getMessages, postMessage } from "../../api/MessageApi";
+import ChatContainer from "../../components/ChatContainer";
+import { musicObj } from "../playlist/[id]";
 
-const userSpeech = {
-  sender: 1,
-  content: "우울할 때 들을 음악 추천해줘"
+export interface PlaylistObj{
+  id: number,
+  content: string,
+  playlist: musicObj[],
 }
-const osoriSpeech = {
-  sender: 0,
-  content: "우울할 땐 이런 음악을 들어보세요!"
+const GREETINGS = {
+  content: `오소리입니다! 어떤 음악을 들려드릴까요?
+  자유롭게 물어보세요! 
+  ex)비오는날 듣기좋은 발라드 추천해줘~`,
+  sender: "bot-greeting",
 }
-
 const Chat : NextPage = () => {
-  const [msg, setMsg] = useState({});
-  const [msgList, setMsgList] = useState<chatObj[]>([
-    userSpeech, osoriSpeech
-  ]);
+  const [msg, setMsg] = useState("");
+  const [msgList, setMsgList] = useState([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSendMessage = ()=>{
-    alert("Message Sent");
-  }
+  const onChangeMsg = (msg: string) => {
+    setMsg(msg);
+  };
+  
+  const getUserMessageList = async () => {
+    try {
+      const result = await getMessages();
+      setMsgList([GREETINGS, ...result.chats]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onSend = async () => {
+    if (msg.length == 0) return;
+    let newMessage = [...msgList, { content: msg, sender: "user" }];
+    setMsgList(newMessage);
+    setMsg("");
+    try {
+      let res = await postMessage(msg);
+      res = {...res, sender: 'bot'};
+      setMsgList([...newMessage, res]); 
+    } catch (e) {
+      console.log(e);
+    }
+    inputRef.current.value = "";
+    inputRef.current.focus();
+  };
   useEffect(()=>{
-    setMsgList([userSpeech, osoriSpeech]);
     if(inputRef.current){
       inputRef.current.focus();
     }
   }, [])
+  useEffect(() => {
+    getUserMessageList();
+  }, []);
   return (
     <>
       <div className="container">
@@ -41,40 +72,30 @@ const Chat : NextPage = () => {
               width:"2.8em",
               height:"2.8em",
               marginLeft:"2.8em",
-              
             }}>
               <Image src="/images/chat-logo.svg" layout="fill" />
             </div>
             <p>오소리</p>
-            <div style={{width:"2.8em", height:"2.8em", marginRight:"2.8em"}}>
-            </div>
+            <div style={{width:"2.8em", height:"2.8em", marginRight:"2.8em"}}></div>
           </div>
           <div className="divider">
             <div id="line"></div>
             <p>Today</p>
             <div id="line"></div>
           </div>
-          <div className="chat-screen">
-            {msgList && msgList.map((msgObj)=>{
-              return <ChatElem key={msgObj.content} chatElemProps={msgObj} />
-            })}
-          </div>
-          <form onSubmit={handleSendMessage} className="chat-form">
-            <input 
-              type="hidden"
-            />
+          <ChatContainer msgList={msgList} />
+          <div className="chat-form">
             <input
               type="text"
               ref={inputRef}
               className="chat-input"
               placeholder="우울할 때 들을만한 음악 추천해줘!"
+              onChange={(e)=>{onChangeMsg(e.target.value)}}
             />
-            <button type="submit">
-              <div style={{position:"relative", width:"34px", height:"34px"}}>
-                <Image src="/images/send.svg" layout="fill"/>
-              </div>
-            </button>
-          </form>
+            <div style={{position:"relative", width:"34px", height:"34px"}} onClick={onSend}>
+              <Image src="/images/send.svg" layout="fill"/>
+            </div>           
+          </div>
         </Container>
       </div>
       <style jsx>{`
@@ -122,6 +143,8 @@ const Chat : NextPage = () => {
           display:flex;
           align-items:center;
           justify-content:center;
+          padding-top:15px;
+          margin-bottom:10px;
         }
         .chat-input{
           height: 40px;

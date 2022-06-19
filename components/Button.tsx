@@ -15,11 +15,12 @@ function Button({ButtonProps}:{ButtonProps:ButtonProps}): JSX.Element{
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content:center;
             padding: 12px;
             color:white;
             cursor:pointer;
             /* secondary color */
-
+            width:100%;
             background: #B695F9;
             border-radius: 10px;
             border:none;

@@ -16,18 +16,22 @@ export const instance = () => {
 
   const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-    timeout: 10000,
+    timeout: 100000,
     headers: {
       "Content-Type": "application/json",
       "Accept": "*/*",
       
     },
+    withCredentials: true,
   });
-  console.log(instance);
   instance.interceptors.request.use(
     function (config) {
       // 요청 바로 직전
-
+      if(typeof window !== 'undefined'){
+        if(localStorage.getItem("authToken")){
+          config.headers["Authorization"] = "Bearer " + JSON.parse(localStorage.getItem("authToken")).accessToken;
+        }
+      }
       return config;
     },
     function (error) {
