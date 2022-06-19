@@ -8,7 +8,19 @@ import { ContainerProps } from "../../components/Container";
 import { checkLogin } from "../../api/AuthApi";
 import { getMessages, postMessage } from "../../api/MessageApi";
 import ChatContainer from "../../components/ChatContainer";
+import { musicObj } from "../playlist/[id]";
 
+export interface PlaylistObj{
+  id: number,
+  content: string,
+  playlist: musicObj[],
+}
+const GREETINGS = {
+  content: `오소리입니다! 어떤 음악을 들려드릴까요?
+  자유롭게 물어보세요! 
+  ex)비오는날 듣기좋은 발라드 추천해줘~`,
+  sender: "bot-greeting",
+}
 const Chat : NextPage = () => {
   const [msg, setMsg] = useState("");
   const [msgList, setMsgList] = useState([]);
@@ -21,7 +33,7 @@ const Chat : NextPage = () => {
   const getUserMessageList = async () => {
     try {
       const result = await getMessages();
-      setMsgList(result.chats);
+      setMsgList([GREETINGS, ...result.chats]);
     } catch (e) {
       console.log(e);
     }
@@ -33,8 +45,9 @@ const Chat : NextPage = () => {
     setMsgList(newMessage);
     setMsg("");
     try {
-      await postMessage(msg);
-      getUserMessageList();
+      let res = await postMessage(msg);
+      res = {...res, sender: 'bot'};
+      setMsgList([...newMessage, res]); 
     } catch (e) {
       console.log(e);
     }
@@ -79,11 +92,9 @@ const Chat : NextPage = () => {
               placeholder="우울할 때 들을만한 음악 추천해줘!"
               onChange={(e)=>{onChangeMsg(e.target.value)}}
             />
-            
             <div style={{position:"relative", width:"34px", height:"34px"}} onClick={onSend}>
               <Image src="/images/send.svg" layout="fill"/>
-            </div>
-           
+            </div>           
           </div>
         </Container>
       </div>
@@ -133,6 +144,7 @@ const Chat : NextPage = () => {
           align-items:center;
           justify-content:center;
           padding-top:15px;
+          margin-bottom:10px;
         }
         .chat-input{
           height: 40px;

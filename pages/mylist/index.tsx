@@ -26,7 +26,6 @@ const Mylist: NextPage = ({results}:any) => {
     try {
       const result = await getPlaylistsRequest();
       setPlayLists(result.playlists);
-      console.log(result)
     } catch (e) {
       console.log(e);
     }
@@ -34,7 +33,7 @@ const Mylist: NextPage = ({results}:any) => {
   useEffect(()=>{
     setNickName(JSON.parse(localStorage.getItem("nickname")));
     getPlayList();
-  }, [])
+  }, []);
   return (
     <>
       <div className="container">

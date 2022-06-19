@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React from 'react';
 import VideoListItem from './VideoListItem';
 import { musicObj, videoListProps } from '../pages/playlist/[id]';
 
@@ -25,7 +25,6 @@ const VideoList = ({videoList, setSelectedVideoId} : videoListProps) => {
         }
       `}</style>
     </>
-    
   );     
 }
 

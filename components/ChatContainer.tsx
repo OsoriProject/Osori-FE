@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import ChatElem from './ChatElem';
+
 export interface ChatContainerProps {
   msgList: any[],
 }
+
 const ChatContainer = ({msgList}:ChatContainerProps) => {
   const divRef = useRef(null);
 
@@ -24,6 +26,7 @@ const ChatContainer = ({msgList}:ChatContainerProps) => {
         .chat-container{
           display: flex;
           width:100%;
+          min-height:440px;
           flex-direction: column;
           border-radius: 0px 0px 35px 35px;
           padding-left: 40px;

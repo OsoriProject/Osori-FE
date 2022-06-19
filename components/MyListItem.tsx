@@ -7,7 +7,7 @@ const MyListItem = ({index, id, name, thumbnail, isLast}: MyListItemProps) => {
   const router = useRouter();
   return (
     <>
-      <div className="mylistitem-container" onClick={()=>{router.push(`/play/${id}`)}}>
+      <div className="mylistitem-container" onClick={()=>{router.push(`/playlist/${id}`)}}>
         <div className="thumbnail-container">
           <div className="play-icon">
             <Image src="/icons/play.svg" layout="fill" />
